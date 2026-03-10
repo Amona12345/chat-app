@@ -19,7 +19,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -28,13 +27,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.chatapplication.HomeActivity
 import com.example.chatapplication.R
 import com.example.chatapplication.register.RegisterActivity
 import com.example.chatapplication.login.ui.theme.ChatApplicationTheme
 import com.example.chatapplication.login.ui.theme.black
+import com.example.chatapplication.utills.LoadingDialog
 import com.example.chatapplication.utills.ChatAuthButton
 import com.example.chatapplication.utills.ChatAuthTextField
 import com.example.chatapplication.utills.ChatTopBar
+import com.example.chatapplication.utills.ErrorDialog
 
 class LogInActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,13 +44,15 @@ class LogInActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ChatApplicationTheme {
-                LoginContent()
+                LoginContent{
+                    finish()
+                }
             }
         }
     }
 
     @Composable
-    fun LoginContent(viewModel: LoginViewModel = viewModel()) {
+    fun LoginContent(viewModel: LoginViewModel = viewModel(),onFinish: () -> Unit) {
         Scaffold(topBar = {
             ChatTopBar("Login")
         }) { paddingValues ->
@@ -87,11 +91,12 @@ class LogInActivity : ComponentActivity() {
                     ChatAuthTextField(
                         state = viewModel.passwordState,
                         viewModel.passwordErrorState.value,
-                        "password"
+                        "password",
+                        isPassword = true
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     ChatAuthButton(
-                        title = "Login", onClick = { }, enabled = true,
+                        title = "Login", onClick = { viewModel.login()}, enabled = true,
                         modifier = Modifier
                             .fillMaxWidth(0.9F)
                             .align(Alignment.CenterHorizontally)
@@ -109,14 +114,19 @@ class LogInActivity : ComponentActivity() {
                 }
             }
          }
-            TriggerEvents(viewModel.events.value)
-        }
+            TriggerEvents(viewModel.events.value,onFinish)
+        LoadingDialog(viewModel.isLoading)
+        ErrorDialog(viewModel.message)
+
+    }
         @Composable
-        fun TriggerEvents(event: LoginEvents, viewModel: LoginViewModel = viewModel()) {
+        fun TriggerEvents(event: LoginEvents,onFinish: () -> Unit,viewModel: LoginViewModel = viewModel()) {
             val context = LocalContext.current
             when (event) {
                 is LoginEvents.NavigateToHome -> {
-
+                    val intent = Intent(context, HomeActivity::class.java)
+                    context.startActivity(intent)
+                    onFinish()
                 }
 
                 is LoginEvents.NavigateToRegister -> {

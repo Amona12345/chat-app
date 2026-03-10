@@ -18,15 +18,19 @@ class RegisterViewModel : ViewModel() {
     val emailErrorState = mutableStateOf<String?>(null)
     val passwordErrorState = mutableStateOf<String?>(null)
     val events = mutableStateOf<RegisterEvents>(RegisterEvents.Idle)
-
+    val isLoading = mutableStateOf(false)
     val auth = Firebase.auth
+    val message = mutableStateOf("")
     fun register() {
         if (validateFields()) {
             //Communicate with firebase
+            isLoading.value = true
             auth.createUserWithEmailAndPassword(emailState.value, passwordState.value)
                 .addOnCompleteListener { task ->
                     if (!task.isSuccessful) {
                         Log.e("TAG", "Error Occured :${task.exception?.localizedMessage}")
+                        isLoading.value = false
+                        message.value = task.exception?.message?:"Error Occurred"
                         return@addOnCompleteListener
                     }
                     val uid = task.result.user?.uid
@@ -43,10 +47,11 @@ class RegisterViewModel : ViewModel() {
     fun addUserToFireStore(uid: String) {
         val user = AppUser(firstNameState.value, emailState.value, uid)
         FirebaseUtils.addUser(user, onSuccessListener = {
+            isLoading.value =false
 
             navigateToHome(user)
         }, onFailureListener = {
-
+            isLoading.value =false
         })
 
     }

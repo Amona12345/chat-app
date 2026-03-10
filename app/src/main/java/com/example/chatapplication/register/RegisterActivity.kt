@@ -25,9 +25,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.chatapplication.HomeActivity
 import com.example.chatapplication.R
 import com.example.chatapplication.ui.theme.ChatApplicationTheme
+import com.example.chatapplication.utills.LoadingDialog
 import com.example.chatapplication.utills.ChatAuthButton
 import com.example.chatapplication.utills.ChatAuthTextField
 import com.example.chatapplication.utills.ChatTopBar
+import com.example.chatapplication.utills.ErrorDialog
 
 class RegisterActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,7 +85,7 @@ class RegisterActivity : ComponentActivity() {
                     Spacer(modifier = Modifier.padding(4.dp))
                     ChatAuthTextField(viewModel.passwordState,
                         viewModel.passwordErrorState.value,
-                        "password")
+                        "password", isPassword = true)
                     Spacer(modifier = Modifier.weight(1F))
                     ChatAuthButton(
                         title = "register", onClick = {
@@ -100,6 +102,8 @@ class RegisterActivity : ComponentActivity() {
             TriggerEvents(viewModel.events.value){
                 onRegisterSuccess
             }
+            LoadingDialog(viewModel.isLoading)
+            ErrorDialog(viewModel.message)
         }
     }
     @Composable

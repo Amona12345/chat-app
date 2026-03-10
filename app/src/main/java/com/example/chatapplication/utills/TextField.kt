@@ -3,6 +3,7 @@ package com.example.chatapplication.utills
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Label
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -13,11 +14,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.chatapplication.login.ui.theme.blue
 
 @Composable
-fun ChatAuthTextField(state: MutableState<String>, error: String?, label :String ,trailingIcon :Int? = null) {
+fun ChatAuthTextField(state: MutableState<String>, error: String?,
+                      label :String ,
+                      isPassword: Boolean = false
+    ,trailingIcon :Int? = null) {
     Column(modifier = Modifier.fillMaxWidth(),horizontalAlignment = Alignment.CenterHorizontally) {
 
         TextField(
@@ -35,6 +42,7 @@ fun ChatAuthTextField(state: MutableState<String>, error: String?, label :String
                 unfocusedLabelColor = blue,
                 errorIndicatorColor = Color.Red
             ),
+            visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
             trailingIcon = {
                 if(trailingIcon!=null){
                     Image(painter = painterResource(id = trailingIcon), contentDescription = "icon")
@@ -42,7 +50,9 @@ fun ChatAuthTextField(state: MutableState<String>, error: String?, label :String
             }
         )
         if(error!=null){
-            Text(text = error, color = Color.Red, fontSize = 16.sp)
+            Text(text = error, color = Color.Red, fontSize = 16.sp,
+                modifier = Modifier.padding(horizontal = 32.dp, vertical = 2.dp).align(
+                Alignment.Start))
         }
     }
     }

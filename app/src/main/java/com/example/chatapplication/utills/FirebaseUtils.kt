@@ -4,6 +4,7 @@ import com.example.chatapplication.model.AppUser
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.firestore
 
 object FirebaseUtils {
@@ -16,4 +17,10 @@ object FirebaseUtils {
             .addOnFailureListener(onFailureListener)
 
     }
+
+    fun getUser(uid: String, onSuccessListener:OnSuccessListener<DocumentSnapshot>,
+                onFailureListener: OnFailureListener) {
+        Firebase.firestore.collection(AppUser.COLLECTION_NAME)
+            .document(uid).get().addOnSuccessListener(onSuccessListener)
+            .addOnFailureListener ( onFailureListener)}
 }
