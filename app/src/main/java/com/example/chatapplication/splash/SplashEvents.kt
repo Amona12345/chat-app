@@ -1,7 +1,9 @@
 package com.example.chatapplication.splash
 
- sealed interface SplashEvents {
-    data  object NavigateToHome : SplashEvents
+import com.example.chatapplication.model.AppUser
+
+sealed interface SplashEvents {
+     data  class NavigateToHome(val user : AppUser) : SplashEvents
     data  object NavigateToLogin : SplashEvents
  data object Idle : SplashEvents
 

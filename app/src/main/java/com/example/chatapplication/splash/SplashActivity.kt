@@ -16,13 +16,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.chatapplication.home.HomeActivity
 import com.example.chatapplication.R
 import com.example.chatapplication.login.LogInActivity
 import com.example.chatapplication.ui.theme.ChatApplicationTheme
+import com.example.chatapplication.utills.Constants
 
 class SplashActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,7 +48,7 @@ fun SplashContent(
 ) {
     LaunchedEffect(Unit) {
         Handler(Looper.getMainLooper()).postDelayed({
-            viewModel.navigateToLogin()
+            viewModel.navigate()
         }, 2000)
     }
     Column(
@@ -77,7 +78,9 @@ fun TriggerEvents(
     val context = LocalContext.current
     when (event) {
         is SplashEvents.NavigateToHome -> {
-            viewModel.navigateToHome()
+            val intent = Intent(context, HomeActivity::class.java)
+            intent.putExtra(Constants.USER_KEY, event.user)
+            context.startActivity(intent)
             onFinish()
         }
 

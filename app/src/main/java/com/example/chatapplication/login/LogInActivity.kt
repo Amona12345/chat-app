@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -27,7 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.chatapplication.HomeActivity
+import com.example.chatapplication.home.HomeActivity
 import com.example.chatapplication.R
 import com.example.chatapplication.register.RegisterActivity
 import com.example.chatapplication.login.ui.theme.ChatApplicationTheme
@@ -57,8 +59,10 @@ class LogInActivity : ComponentActivity() {
             ChatTopBar("Login")
         }) { paddingValues ->
             paddingValues
+            val state = rememberScrollState()
+
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize().verticalScroll(state)
             ) {
 
                 Image(
@@ -66,7 +70,7 @@ class LogInActivity : ComponentActivity() {
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp),
+                        .height(300.dp),
                     contentScale = ContentScale.FillWidth
                 )
 

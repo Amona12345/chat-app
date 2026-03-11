@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,7 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.chatapplication.HomeActivity
+import com.example.chatapplication.home.HomeActivity
 import com.example.chatapplication.R
 import com.example.chatapplication.ui.theme.ChatApplicationTheme
 import com.example.chatapplication.utills.LoadingDialog
@@ -47,8 +49,9 @@ class RegisterActivity : ComponentActivity() {
     }
 
     @Composable
-    fun RegisterContent(viewModel: RegisterViewModel = viewModel(),onFinish: () -> Unit,
-                        onRegisterSuccess: () -> Unit) {
+    fun RegisterContent(onFinish: () -> Unit,
+                        onRegisterSuccess: () -> Unit,
+                        viewModel: RegisterViewModel = viewModel()) {
         Scaffold(
             topBar = {
                 ChatTopBar(title = "register") {
@@ -57,16 +60,18 @@ class RegisterActivity : ComponentActivity() {
             }
         ) { paddingValues ->
             paddingValues
+            val state = rememberScrollState()
+
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize().verticalScroll(state)
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.bg),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp),
-                    contentScale = ContentScale.Crop
+                        .height(300.dp),
+                    contentScale = ContentScale.FillWidth
                 )
 
                 Column(
@@ -113,7 +118,6 @@ class RegisterActivity : ComponentActivity() {
         when (event) {
             RegisterEvents.Idle -> {}
             is RegisterEvents.NavigateToHome -> {
-
                 val intent = Intent(context, HomeActivity::class.java)
                 context.startActivity(intent)
                 onSuccessRegister()
